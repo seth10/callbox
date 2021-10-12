@@ -1,25 +1,8 @@
-from flask import Flask, request
-from twilio.twiml.voice_response import VoiceResponse
-
-app = Flask(__name__)
-
-
-@app.route("/voice", methods=['GET', 'POST'])
-def voice():
-    """Respond to incoming phone calls and mention the caller's city"""
-    # Get the caller's city from Twilio's request to our app
-    city = request.values['FromCity']
-
-    # Start our TwiML response
-    resp = VoiceResponse()
-
-    # Read a message aloud to the caller
-    resp.say('Never gonna give you up, {}!'.format(city), voice='alice')
-
-    # Play an audio file for the caller
-    resp.play('https://demo.twilio.com/docs/classic.mp3')
-
-    return str(resp)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+def lambda_handler(event, context):
+    response = """<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="alice">hello world!</Say>
+</Response>
+"""
+    response_no_whitespace = ''.join([s.strip() for s in response.split("\n")])
+    return {'statusCode': 200, 'body' : response_no_whitespace}
